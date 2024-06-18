@@ -1,3 +1,7 @@
+from Pilas import *
+from datetime import datetime
+
+
 class Proyecto:
     def __init__(
         self,
@@ -21,9 +25,23 @@ class Proyecto:
         self.gerente = gerente
         self.equipo = equipo
         self.tarea = []
+        self.pila_prioridades = []
+        self.cola_vencimientos = []
 
     def agregar_tarea(self, tarea):
         self.tarea.append(tarea)
+
+    def agregar_pila(self, pila_prioridades):
+        self.pila_prioridades.append(pila_prioridades)
+
+    def agregar_prioridad(self, tarea_prioritaria):
+        if not isinstance(self.pila_prioridades, Pila):
+            self.pila_prioridades = Pila()  # Inicializa la pila si aún no existe
+        self.pila_prioridades.apilar(tarea_prioritaria)
+        print(f"Tarea prioritaria '{tarea_prioritaria.nombre}' agregada.")
+
+    def agregar_cola(self, cola_vencimientos):
+        self.cola_vencimientos.append(cola_vencimientos)
 
 
 class Tarea:

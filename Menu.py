@@ -1,5 +1,5 @@
-# from Gestion_de_proyectos import *
-# from Pilas import *
+from Gestion_de_proyectos import *
+from Pilas import *
 from datetime import datetime
 
 
@@ -7,6 +7,7 @@ def main():
     id = 0
     id_tarea = 0
     gestor = {}
+
     # Ciclo General
     while True:
         print("")
@@ -49,6 +50,7 @@ def main():
                     estado_actual = input("Ingrese el estado actual del proyecto: ")
                     empresa = input("Ingrese el nombre de la empresa del proyecto: ")
                     gerente = input("Ingrese el nombre del gerente del proyecto: ")
+                    equipo = input("Ingrese el nombre del equipo del proyecto: ")
                     fecha_inicio = datetime.strptime(fecha_inicio, "%d/%m/%Y")
                     fecha_vencimiento = datetime.strptime(fecha_vencimiento, "%d/%m/%Y")
 
@@ -60,7 +62,9 @@ def main():
                         "estado_actual": estado_actual,
                         "empresa": empresa,
                         "gerente": gerente,
+                        "equipo": equipo,
                     }
+
                     print("El proyecto a sido creado, su ID es " + str(id))
 
                 elif opcion == "2":
@@ -87,6 +91,9 @@ def main():
                         gerente = input(
                             "Ingrese el nombre del nuevo gerente del proyecto: "
                         )
+                        equipo = input(
+                            "Ingrese el nombre del nuevo equipo del proyecto: "
+                        )
 
                         # Convertir fechas a objetos datetime
                         fecha_inicio = datetime.strptime(fecha_inicio, "%d/%m/%Y")
@@ -103,6 +110,7 @@ def main():
                             "estado_actual": estado_actual,
                             "empresa": empresa,
                             "gerente": gerente,
+                            "equipo": equipo,
                         }
                     else:
                         print("El ID del proyecto no existe")
@@ -125,6 +133,7 @@ def main():
                         print(f"Estado actual: {proyecto['estado_actual']}")
                         print(f"Empresa: {proyecto['empresa']}")
                         print(f"Gerente: {proyecto['gerente']}")
+                        print(f"Equipo: {proyecto['equipo']}")
                     else:
                         print("El ID del proyecto no existe")
 
