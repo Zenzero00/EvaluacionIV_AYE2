@@ -1,20 +1,32 @@
+from datetime import datetime
+
+
 class Pila:
     def __init__(self):
         self.elementos = []
 
     def esta_vacia(self):
-        return not self.elementos
+        return len(self.elementos) == 0
 
-    def apilar(self, item):
-        self.elementos.append(item)
+    def agregar(self, tarea):
+        self.elementos.append(tarea)
 
-    def desapilar(self):
+    def eliminar(self):
         if not self.esta_vacia():
             return self.elementos.pop()
 
-    def cima(self):
+    def consultar_cima(self):
         if not self.esta_vacia():
             return self.elementos[-1]
+
+    def tiempo_total(self):
+        hoy = datetime.now()
+        total_dias = 0
+        for tarea in self.elementos:
+            if "fecha_de_vencimiento_tarea" in tarea:
+                dias_restantes = (tarea["fecha_de_vencimiento_tarea"] - hoy).days
+                total_dias += max(dias_restantes, 0)
+        return total_dias
 
 
 class Cola:
@@ -22,15 +34,34 @@ class Cola:
         self.elementos = []
 
     def esta_vacia(self):
-        return not self.elementos
+        return len(self.elementos) == 0
 
-    def encolar(self, item):
-        self.elementos.insert(0, item)
+    def agregar(self, tarea):
+        if isinstance(tarea["fecha_de_vencimiento_tarea"], str):
+            tarea["fecha_de_vencimiento_tarea"] = datetime.strptime(
+                tarea["fecha_de_vencimiento_tarea"], "%d/%m/%Y"
+            )
+        elif not isinstance(tarea["fecha_de_vencimiento_tarea"], datetime):
+            raise ValueError(
+                "La fecha de vencimiento debe ser una cadena de texto o un objeto datetime"
+            )
 
-    def desencolar(self):
+        self.elementos.append(tarea)
+        self.elementos.sort(key=lambda x: x["fecha_de_vencimiento_tarea"])
+
+    def eliminar(self):
         if not self.esta_vacia():
             return self.elementos.pop()
 
-    def frente(self):
+    def consultar_frente(self):
         if not self.esta_vacia():
             return self.elementos[-1]
+
+    def tiempo_total(self):
+        hoy = datetime.now()
+        total_dias = 0
+        for tarea in self.elementos:
+            if "fecha_de_vencimiento_tarea" in tarea:
+                dias_restantes = (tarea["fecha_de_vencimiento_tarea"] - hoy).days
+                total_dias += max(dias_restantes, 0)
+        return total_dias

@@ -1,21 +1,25 @@
-from Gestion_de_proyectos import *
 from Pilas import *
 from datetime import datetime
 
 
+# Integrantes:
+#     Francisco Unda V27963513
+#     Santiago Pinto V30889670
+#     Francisco Román
 def main():
+    gestor = {}
     id = 0
     id_tarea = 0
-    gestor = {}
-
+    pila_prioridades = Pila()
+    cola_vencimiento = Cola()
     # Ciclo General
     while True:
         print("")
         print("Nota: No se pueden añadir tareas si no hay proyectos creados")
         print("y no se pueden crear subtareas si no hay tareas creadas")
         print("Menu Principal:")
-        print("(1) Crear un Proyecto.")
-        print("(2) Añadir una Tarea.")
+        print("(1) Menú de Proyectos.")
+        print("(2) Menú de Tareas.")
         print("(0) Salir.")
         print("")
 
@@ -176,53 +180,85 @@ def main():
                         break
 
                     elif opcion == "1":
-                        id_proyecto = int(
-                            input(
-                                "Ingrese el ID del Proyecto al que desea agregarle una Tarea: "
-                            )
+                        print("Opciones para añadir Tareas.")
+                        print("Nota para almacenar una tarea, necesita estar creada.")
+                        print("(1) Añadir una Tarea nueva.")
+                        print("(2) Almacenar una Tarea Prioritaria.")
+                        print("(0) Salir al Menu de Tareas.")
+                        print("")
+                        opcion = input(
+                            "Indique la Opcion que desea de manera númerica: "
                         )
-                        if id_proyecto in gestor:
-                            id_tarea += 1
-                            nombre_tarea = input("Ingrese el nombre de la tarea: ")
-                            empresa_tarea = input(
-                                "Ingrese el nombre de la empresa o cliente a la que va dirigida la Tarea: "
-                            )
-                            descripcion_tarea = input(
-                                "Ingrese la descripcion de la tarea: "
-                            )
-                            fecha_inicio_tarea = input(
-                                "Ingrese la fecha de inicio de la Tarea (dd/mm/yyyy): "
-                            )
-                            fecha_vencimiento_tarea = input(
-                                "Ingrese la fecha de vencimiento de la Tarea (dd/mm/yyyy): "
-                            )
-                            estado_tarea = input("Ingrese el estado de la tarea: ")
-                            porcentaje_tarea = float(
+                        if opcion == "1":
+                            id_proyecto = int(
                                 input(
-                                    "Ingrese del 0 al 100 el porcentaje del progreso de la Tarea: "
+                                    "Ingrese el ID del Proyecto al que desea agregarle una Tarea: "
                                 )
                             )
-                            fecha_inicio_tarea = datetime.strptime(
-                                fecha_inicio_tarea, "%d/%m/%Y"
-                            )
-                            fecha_vencimiento_tarea = datetime.strptime(
-                                fecha_vencimiento_tarea, "%d/%m/%Y"
-                            )
-                            if "tareas" not in gestor[id_proyecto]:
-                                gestor[id_proyecto]["tareas"] = {}
+                            if id_proyecto in gestor:
+                                id_tarea += 1
+                                nombre_tarea = input("Ingrese el nombre de la tarea: ")
+                                empresa_tarea = input(
+                                    "Ingrese el nombre de la empresa o cliente a la que va dirigida la Tarea: "
+                                )
+                                descripcion_tarea = input(
+                                    "Ingrese la descripcion de la tarea: "
+                                )
+                                fecha_inicio_tarea = input(
+                                    "Ingrese la fecha de inicio de la Tarea (dd/mm/yyyy): "
+                                )
+                                fecha_vencimiento_tarea = input(
+                                    "Ingrese la fecha de vencimiento de la Tarea (dd/mm/yyyy): "
+                                )
+                                estado_tarea = input("Ingrese el estado de la tarea: ")
+                                porcentaje_tarea = float(
+                                    input(
+                                        "Ingrese del 0 al 100 el porcentaje del progreso de la Tarea: "
+                                    )
+                                )
+                                fecha_inicio_tarea = datetime.strptime(
+                                    fecha_inicio_tarea, "%d/%m/%Y"
+                                )
+                                fecha_vencimiento_tarea = datetime.strptime(
+                                    fecha_vencimiento_tarea, "%d/%m/%Y"
+                                )
+                                if "tareas" not in gestor[id_proyecto]:
+                                    gestor[id_proyecto]["tareas"] = {}
 
-                            gestor[id_proyecto]["tareas"][id_tarea] = {
-                                "nombre_tarea": nombre_tarea,
-                                "empresa_tarea": empresa_tarea,
-                                "descripcion_tarea": descripcion_tarea,
-                                "fecha_de_inicio_tarea": fecha_inicio_tarea,
-                                "fecha_de_vencimiento_tarea": fecha_vencimiento_tarea,
-                                "estado_tarea": estado_tarea,
-                                "porcentaje": porcentaje_tarea,
-                            }
-                            print("La Tarea a sido creada, su ID es " + str(id_tarea))
+                                gestor[id_proyecto]["tareas"][id_tarea] = {
+                                    "id_proyecto": id_proyecto,
+                                    "id_tarea": id_tarea,
+                                    "nombre_tarea": nombre_tarea,
+                                    "empresa_tarea": empresa_tarea,
+                                    "descripcion_tarea": descripcion_tarea,
+                                    "fecha_de_inicio_tarea": fecha_inicio_tarea,
+                                    "fecha_de_vencimiento_tarea": fecha_vencimiento_tarea,
+                                    "estado_tarea": estado_tarea,
+                                    "porcentaje": porcentaje_tarea,
+                                }
+                                cola_vencimiento.agregar(
+                                    gestor[id_proyecto]["tareas"][id_tarea]
+                                )
+                                print(
+                                    "La Tarea a sido creada, su ID es " + str(id_tarea)
+                                )
+                            else:
+                                print("El ID del Proyecto no existe")
+
+                        elif opcion == "2":
+                            id_proyecto = int(input("Ingrese el ID del Proyecto: "))
+                            id_tarea_consulta = int(
+                                input(
+                                    "Ingrese el ID de la Tarea la cual desea priorizar: "
+                                )
+                            )
+                            pila_prioridades.agregar(
+                                gestor[id_proyecto]["tareas"][id_tarea_consulta]
+                            )
+                        elif opcion == "0":
+                            pass
                         else:
-                            print("El ID del Proyecto no existe")
+                            print("Opcion no valida")
                     elif opcion == "2":
                         id_proyecto = int(input("Ingrese el ID del Proyecto: "))
                         id_tarea_consulta = int(
@@ -262,6 +298,8 @@ def main():
                             )
 
                             gestor[id_proyecto]["tareas"][id_tarea_consulta] = {
+                                "id_proyecto": id_proyecto,
+                                "id_tarea": id_tarea_consulta,
                                 "nombre_tarea": nombre_tarea,
                                 "empresa_tarea": empresa_tarea,
                                 "descripcion_tarea": descripcion_tarea,
@@ -278,50 +316,140 @@ def main():
                             print("El ID del Proyecto o de la Tarea no existe")
 
                     elif opcion == "3":
-                        id_proyecto = int(input("Ingrese el ID del Proyecto: "))
-                        id_tarea_consulta = int(
-                            input("Ingrese el ID de la Tarea que desea consultar: ")
+                        print("Opciones para consultar Tareas.")
+                        print("(1) Consultar una Tarea Especifica.")
+                        print("(2) Consultar la Tarea Prioritaria.")
+                        print("(3) Consultar Tarea proxima a Vencer.")
+                        print("(0) Salir al Menu de Tareas.")
+                        print("")
+                        opcion = input(
+                            "Indique la Opcion que desea de manera númerica: "
                         )
-                        if (
-                            id_proyecto in gestor
-                            and "tareas" in gestor[id_proyecto]
-                            and id_tarea_consulta in gestor[id_proyecto]["tareas"]
-                        ):
-                            tarea = gestor[id_proyecto]["tareas"][id_tarea_consulta]
-                            print(f"ID del Proyecto: {id_proyecto}")
-                            print(f"ID de la Tarea: {id_tarea_consulta}")
-                            print(f"Nombre: {tarea['nombre_tarea']}")
-                            print(f"Empresa/Cliente: {tarea['empresa_tarea']}")
-                            print(f"Descripcion: {tarea['descripcion_tarea']}")
+                        if opcion == "1":
+                            id_proyecto = int(input("Ingrese el ID del Proyecto: "))
+                            id_tarea_consulta = int(
+                                input("Ingrese el ID de la Tarea que desea consultar: ")
+                            )
+                            if (
+                                id_proyecto in gestor
+                                and "tareas" in gestor[id_proyecto]
+                                and id_tarea_consulta in gestor[id_proyecto]["tareas"]
+                            ):
+                                tarea = gestor[id_proyecto]["tareas"][id_tarea_consulta]
+                                print(f"ID del Proyecto: {id_proyecto}")
+                                print(f"ID de la Tarea: {id_tarea_consulta}")
+                                print(f"Nombre: {tarea['nombre_tarea']}")
+                                print(f"Empresa/Cliente: {tarea['empresa_tarea']}")
+                                print(f"Descripcion: {tarea['descripcion_tarea']}")
+                                print(
+                                    f"Fecha de inicio: {tarea['fecha_de_inicio_tarea'].strftime('%d/%m/%Y')}"
+                                )
+                                print(
+                                    f"Fecha de vencimiento: {tarea['fecha_de_vencimiento_tarea'].strftime('%d/%m/%Y')}"
+                                )
+                                print(f"Estado actual: {tarea['estado_tarea']}")
+                                print(f"Porcentaje: {tarea['porcentaje']}")
+                            else:
+                                print("El ID del Proyecto o de la Tarea no existe")
+                        elif opcion == "2":
+                            tarea_prioritaria = pila_prioridades.consultar_cima()
+                            tiempo_total_prioridades = pila_prioridades.tiempo_total()
                             print(
-                                f"Fecha de inicio: {tarea['fecha_de_inicio_tarea'].strftime('%d/%m/%Y')}"
+                                f"ID del Proyecto: {tarea_prioritaria['id_proyecto']}"
+                            )
+                            print(f"ID de la Tarea: {tarea_prioritaria['id_tarea']}")
+                            print(f"Nombre: {tarea_prioritaria['nombre_tarea']}")
+                            print(
+                                f"Empresa/Cliente: {tarea_prioritaria['empresa_tarea']}"
                             )
                             print(
-                                f"Fecha de vencimiento: {tarea['fecha_de_vencimiento_tarea'].strftime('%d/%m/%Y')}"
+                                f"Descripcion: {tarea_prioritaria['descripcion_tarea']}"
                             )
-                            print(f"Estado actual: {tarea['estado_tarea']}")
-                            print(f"Porcentaje: {tarea['porcentaje']}")
+                            print(
+                                f"Fecha de inicio: {tarea_prioritaria['fecha_de_inicio_tarea'].strftime('%d/%m/%Y')}"
+                            )
+                            print(
+                                f"Fecha de vencimiento: {tarea_prioritaria['fecha_de_vencimiento_tarea'].strftime('%d/%m/%Y')}"
+                            )
+                            print(f"Estado actual: {tarea_prioritaria['estado_tarea']}")
+                            print(f"Porcentaje: {tarea_prioritaria['porcentaje']}")
+                            print(
+                                f"Tiempo total de tareas prioritarias: {tiempo_total_prioridades}"
+                            )
+                        elif opcion == "3":
+                            tarea_proxima_vencer = cola_vencimiento.consultar_frente()
+                            tiempo_total_vencimientos = cola_vencimiento.tiempo_total()
+                            print(
+                                f"ID del Proyecto: {tarea_proxima_vencer['id_proyecto']}"
+                            )
+                            print(f"ID de la Tarea: {tarea_proxima_vencer['id_tarea']}")
+                            print(f"Nombre: {tarea_proxima_vencer['nombre_tarea']}")
+                            print(
+                                f"Empresa/Cliente: {tarea_proxima_vencer['empresa_tarea']}"
+                            )
+                            print(
+                                f"Descripcion: {tarea_proxima_vencer['descripcion_tarea']}"
+                            )
+                            print(
+                                f"Fecha de inicio: {tarea_proxima_vencer['fecha_de_inicio_tarea'].strftime('%d/%m/%Y')}"
+                            )
+                            print(
+                                f"Fecha de vencimiento: {tarea_proxima_vencer['fecha_de_vencimiento_tarea'].strftime('%d/%m/%Y')}"
+                            )
+                            print(
+                                f"Estado actual: {tarea_proxima_vencer['estado_tarea']}"
+                            )
+                            print(f"Porcentaje: {tarea_proxima_vencer['porcentaje']}")
+                            print(
+                                f"Tiempo total de tareas próximas a vencer: {tiempo_total_vencimientos}"
+                            )
+                        elif opcion == "0":
+                            pass
                         else:
-                            print("El ID del Proyecto o de la Tarea no existe")
+                            print("Opción no válida")
 
                     elif opcion == "4":
-                        id_proyecto = int(input("Ingrese el ID del Proyecto: "))
-                        id_tarea_eliminar = int(
-                            input("Ingrese el ID de la Tarea que desea eliminar: ")
+                        print("Opciones para eliminar Tareas.")
+                        print("(1) Eliminar una Tarea Especifica.")
+                        print("(2) Eliminar la Tarea más Prioritaria.")
+                        print("(3) Eliminar Tarea proxima a Vencer.")
+                        print("(0) Salir al Menu de Tareas.")
+                        print("")
+                        opcion = input(
+                            "Indique la Opcion que desea de manera númerica: "
                         )
-                        if (
-                            id_proyecto in gestor
-                            and "tareas" in gestor[id_proyecto]
-                            and id_tarea_eliminar in gestor[id_proyecto]["tareas"]
-                        ):
-                            gestor[id_proyecto]["tareas"].pop(id_tarea_eliminar)
-                            print(
-                                f"La tarea con ID {id_tarea_eliminar} ha sido eliminada."
+                        if opcion == "1":
+                            id_proyecto = int(input("Ingrese el ID del Proyecto: "))
+                            id_tarea_eliminar = int(
+                                input("Ingrese el ID de la Tarea que desea eliminar: ")
                             )
+                            if (
+                                id_proyecto in gestor
+                                and "tareas" in gestor[id_proyecto]
+                                and id_tarea_eliminar in gestor[id_proyecto]["tareas"]
+                            ):
+                                gestor[id_proyecto]["tareas"].pop(id_tarea_eliminar)
+                                print(
+                                    f"La tarea con ID {id_tarea_eliminar} ha sido eliminada."
+                                )
+                            else:
+                                print(
+                                    "El ID del Proyecto o de la Tarea no existe o ya fue eliminado."
+                                )
+                        elif opcion == "2":
+                            pila_prioridades.eliminar()
+                            print(
+                                "La Tarea más prioritaria ha sido eliminada. \n Consulte si hay otra Tarea Prioritaria la cual tenga que realizar."
+                            )
+                        elif opcion == "3":
+                            cola_vencimiento.eliminar()
+                            print(
+                                "La Tarea proxima a vencer ha sido eliminada. \n Consulte si hay otra Tarea proxima a vencer la cual tenga que realizar."
+                            )
+                        elif opcion == "0":
+                            pass
                         else:
-                            print(
-                                "El ID del Proyecto o de la Tarea no existe o ya fue eliminado."
-                            )
+                            print("Opción no válida")
                     else:
                         print("Opcion no valida")
             else:
